@@ -1,6 +1,6 @@
 import cv2
 
-desired_size = (64,64)
+desired_size = (32,32)
 
 def resize(img, new_size):
 	res = cv2.resize(img, new_size, interpolation = cv2.INTER_CUBIC)
