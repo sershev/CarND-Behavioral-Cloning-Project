@@ -1,6 +1,7 @@
 import cv2
+import config as cfg
 
-desired_size = (32,32)
+desired_size = (cfg.CONFIG['img_width'], cfg.CONFIG['img_height'])
 
 def resize(img, new_size):
 	res = cv2.resize(img, new_size, interpolation = cv2.INTER_CUBIC)

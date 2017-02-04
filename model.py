@@ -3,22 +3,25 @@ from keras.models import Sequential
 from keras.layers.core import Dense, Flatten, Activation, Dropout
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D, AveragePooling2D
-from keras.activations import relu, softmax
+from keras.activations import relu, elu
+from keras.callbacks import ModelCheckpoint
 
 import numpy as np
 import data
+import config as cfg
 
 
 #__________________Model_________________
 def create_model():
 	model = Sequential()
-	model.add(Convolution2D(32, 3, 3, border_mode="valid", input_shape=(32, 32, 3)))
+	model.add(Convolution2D(32, 3, 3, border_mode="valid", input_shape=(cfg.CONFIG['img_height'],cfg.CONFIG['img_width'],3)))
 	model.add(MaxPooling2D(pool_size=(2,2), strides=None, border_mode="valid", dim_ordering="default"))
-	model.add(Activation("relu"))
-	model.add(Dropout(0.5))
-	model.add(Flatten(input_shape=(8, 8, 16)))
-	model.add(Dense(128))
-	model.add(Activation('relu'))
+	model.add(Activation("elu"))
+	
+	model.add(Flatten())
+	
+	model.add(Dense(100))
+
 	model.add(Dense(1))
 	model.add(Activation('linear'))
 	return model
@@ -47,7 +50,8 @@ mdoel = load_model_weights(model)
 
 #_______________Training_________________
 model.compile('adam', 'mse', ['accuracy'])
-model.fit_generator(data.generate_arrays_from_file(), samples_per_epoch=400, nb_epoch=6)
+#ModelCheckpoint("sweights.{epoch:02d}-{val_loss:.2f}.hdf5", monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
+model.fit_generator(data.generate_arrays_from_file(), samples_per_epoch=37000, nb_epoch=1)
 
 save_model(model)
 save_model_weights(model)

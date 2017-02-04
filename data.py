@@ -31,9 +31,14 @@ def generate_arrays_from_file(csv_file="driving_log.csv", batch_size=128):
 				image = ndimage.imread(fname, mode="RGB")
 				image = preprocess_image.preprocess(image)
 
+				#image2 = np.fliplr(image)
+				#steering_angle2 = (-1.0)*steering_angle
+
 				# put data into result array
 				images.append(image)
 				angles.append(steering_angle)
+				#images.append(image2)
+				#angles.append(steering_angle2)
 
 			features = np.array(images)
 			labels = np.array(angles)
