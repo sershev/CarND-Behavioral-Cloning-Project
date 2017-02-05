@@ -47,6 +47,10 @@ final_mean = math.floor(final_mean)
 print("Totaal different angles after equalization: " + str(len(final_destribution)))
 print("Mean amount of examples/angle after equalization: " + str(final_mean))
 
+df[3] = df[3].apply(pd.to_numeric)
+df.hist(column=3, bins = final_mean)
+plt.show()
+
 final_df[3] = final_df[3].apply(pd.to_numeric)
 final_df.hist(column=3, bins = final_mean)
 plt.show()
