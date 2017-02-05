@@ -6,7 +6,7 @@ import preprocess_image
 
 import random
 
-def generate_arrays_from_file(csv_file="driving_log.csv", batch_size=128):
+def generate_arrays_from_file(csv_file="new_driving_log.csv", batch_size=128):
 
 	df = pd.read_csv(csv_file, header=None)
 
@@ -21,24 +21,27 @@ def generate_arrays_from_file(csv_file="driving_log.csv", batch_size=128):
 				steering_angle = row[3]
 
 				# skip some 0 angles
-				if (abs(steering_angle) == 0.0):
-					rand = random.randrange(10)
-					if (rand <5):
-					#print('skip: {} - {}'.format(index, fname))
-						continue
+				#if (abs(steering_angle) == 0.0):
+				#	rand = random.randrange(10)
+				#	if (rand <5):
+				#	#print('skip: {} - {}'.format(index, fname))
+				#		continue
 
 				# read data
 				image = ndimage.imread(fname, mode="RGB")
 				image = preprocess_image.preprocess(image)
 
-				#image2 = np.fliplr(image)
-				#steering_angle2 = (-1.0)*steering_angle
-
 				# put data into result array
 				images.append(image)
 				angles.append(steering_angle)
-				#images.append(image2)
-				#angles.append(steering_angle2)
+
+				# Data augmentation
+				if (abs(steering_angle) != 0.0):
+					image2 = np.fliplr(image)
+					steering_angle2 = (-1.0)*steering_angle
+
+					images.append(image2)
+					angles.append(steering_angle2)
 
 			features = np.array(images)
 			labels = np.array(angles)
