@@ -1,6 +1,6 @@
 from keras.models import Sequential
 #from keras.layers import Input
-from keras.layers.core import Dense, Flatten, Activation, Dropout
+from keras.layers.core import Dense, Flatten, Activation, Dropout, Lambda
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D, AveragePooling2D
 from keras.activations import relu, elu
@@ -14,16 +14,48 @@ import config as cfg
 #__________________Model_________________
 def create_model():
 	model = Sequential()
-	model.add(Convolution2D(32, 3, 3, border_mode="valid", input_shape=(cfg.CONFIG['img_height'],cfg.CONFIG['img_width'],3)))
-	model.add(MaxPooling2D(pool_size=(2,2), strides=None, border_mode="valid", dim_ordering="default"))
+	model.add(Lambda( lambda x: x/127-1, input_shape=(cfg.CONFIG['img_height'],cfg.CONFIG['img_width'], 3)))
+	
+	model.add(Convolution2D(24, 5, 5, subsample=(2,2), border_mode="valid", init="normal" ))
 	model.add(Activation("elu"))
+	model.add(Dropout(0.5))
+
+	model.add(Convolution2D(36, 5, 5, subsample=(2,2), border_mode="valid", init="normal"))
+	model.add(Activation("elu"))
+	model.add(Dropout(0.5))
+
+	model.add(Convolution2D(48, 5, 5, subsample=(2,2), border_mode="valid", init="normal"))
+	model.add(Activation("elu"))
+	model.add(Dropout(0.5))
+
+	model.add(Convolution2D(64, 3, 3, subsample=(1,1), border_mode="valid", init="normal"))
+	model.add(Activation("elu"))
+	model.add(Dropout(0.5))
+
+	model.add(Convolution2D(64, 3, 3, subsample=(1,1), border_mode="valid", init="normal"))
+	model.add(Activation("elu"))
+	model.add(Dropout(0.5))
 	
 	model.add(Flatten())
 	
+	model.add(Dense(1164))
+	model.add(Activation("elu"))
+	model.add(Dropout(0.5))
+
 	model.add(Dense(100))
+	model.add(Activation("elu"))
+	model.add(Dropout(0.5))
+
+	model.add(Dense(50))
+	model.add(Activation("elu"))
+	model.add(Dropout(0.5))
+
+	model.add(Dense(10))
+	model.add(Activation("elu"))
 
 	model.add(Dense(1))
 	model.add(Activation('linear'))
+
 	return model
 
 def save_model(model, filename="model.json"):
@@ -51,7 +83,7 @@ mdoel = load_model_weights(model)
 #_______________Training_________________
 model.compile('adam', 'mse', ['accuracy'])
 #ModelCheckpoint("sweights.{epoch:02d}-{val_loss:.2f}.hdf5", monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
-model.fit_generator(data.generate_arrays_from_file(), samples_per_epoch=37000, nb_epoch=1)
+model.fit_generator(data.generate_arrays_from_file(), samples_per_epoch=cfg.CONFIG['samples_per_epoch'], nb_epoch=cfg.CONFIG['epochs'])
 
 save_model(model)
 save_model_weights(model)
