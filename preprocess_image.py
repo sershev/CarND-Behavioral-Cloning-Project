@@ -1,5 +1,6 @@
 import cv2
 import config as cfg
+import numpy as np
 
 desired_size = (cfg.CONFIG['img_width'], cfg.CONFIG['img_height'])
 
@@ -24,8 +25,9 @@ def normalize_data(data):
     return a + (data - min_val)*(b-a)/(max_val - min_val)
 
 def preprocess(image):
+	image = np.delete(image, cfg.CONFIG['img_height']/3, axis=0)
 	image = resize(image, desired_size)
 	image = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
 	#image = filter(image)
-	image = normalize_data(image)
+	#image = normalize_data(image)
 	return image
