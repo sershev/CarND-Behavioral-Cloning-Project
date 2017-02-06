@@ -6,7 +6,7 @@ import preprocess_image
 
 import random
 
-def generate_arrays_from_file(csv_file="new_driving_log.csv", batch_size=128):
+def generate_arrays_from_file(csv_file="new_driving_log.csv", batch_size=256):
 
 	df = pd.read_csv(csv_file, header=None)
 
