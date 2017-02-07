@@ -20,13 +20,6 @@ def generate_arrays_from_file(csv_file="new_driving_log.csv", batch_size=256):
 				fname = row[0]
 				steering_angle = row[3]
 
-				# skip some 0 angles
-				#if (abs(steering_angle) == 0.0):
-				#	rand = random.randrange(10)
-				#	if (rand <5):
-				#	#print('skip: {} - {}'.format(index, fname))
-				#		continue
-
 				# read data
 				image = ndimage.imread(fname, mode="RGB")
 				image = preprocess_image.preprocess(image)
