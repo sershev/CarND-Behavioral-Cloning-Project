@@ -81,7 +81,7 @@ model = create_model()
 mdoel = load_model_weights(model)
 
 #_______________Training_________________
-model.compile('adam', 'mse', ['accuracy'])
+model.compile('adam', 'mse', ['mse'])
 #ModelCheckpoint("sweights.{epoch:02d}-{val_loss:.2f}.hdf5", monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
 model.fit_generator(data.generate_arrays_from_file(), samples_per_epoch=cfg.CONFIG['samples_per_epoch'], nb_epoch=cfg.CONFIG['epochs'])
 

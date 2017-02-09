@@ -8,6 +8,7 @@ csv_file = "driving_log.csv"
 csv_file_out="new_driving_log.csv"
 df = pd.read_csv(csv_file, header=None)
 
+df[3] = round(df[3],4)
 angles = df[3]
 destribution = Counter(angles)
 
@@ -22,15 +23,17 @@ final_df = pd.DataFrame()
 for key in destribution:
 	partition = df.loc[angles == key]
 	diff = mean - len(partition)
+
 	# to many samples
 	if (diff <= 0):
 		sample = partition.sample(n=mean)
 		final_df = pd.concat([final_df,sample])
 	# to few samples
 	elif (diff > 0):
-		for i in range(1, diff+1):
+		for i in range(1, mean+1):
 			sample = partition.sample(n=1)
 			final_df = pd.concat([final_df,sample])
+
 
 
 # write new data destribution to file
@@ -52,6 +55,6 @@ df.hist(column=3, bins = final_mean)
 plt.show()
 
 final_df[3] = final_df[3].apply(pd.to_numeric)
-final_df.hist(column=3, bins = final_mean)
+final_df.hist(column=3, bins = final_mean+150)
 plt.show()
 
