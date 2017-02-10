@@ -61,9 +61,8 @@ The model was trained and validated on different data sets in combination with d
 
 The model used an adam optimizer, so the learning rate was not tuned manually 
 ```
-model.compile('adam', 'mse', ['accuracy'])
+model.compile('adam', 'mse', , ['mse'])
 ```
-(['accuracy'] was not really used for the mesurement, instead I looked more to *mse*, and how the car behaves after training.)
 
 #### 4. Appropriate training data
 
